@@ -23,12 +23,19 @@ public class HomeController : Controller
         return View();
     }
     
-    public IActionResult Calculator()
+    public IActionResult Calculator(string op, double? x, double? y)
     {
-        var op = Request.Query["op"];
-        var x = double.Parse(Request.Query["x"]);
-        var y = double.Parse(Request.Query["y"]);
-        double result = 0.0;
+        // var op = Request.Query["op"];
+        // var x = double.Parse(Request.Query["x"]);
+        // var y = double.Parse(Request.Query["y"]);
+
+        if (x is null || y is null)
+        {
+            ViewBag.ErrorMessage = "Wrong x/y format!";
+            return View("CalculatorError");
+        }
+        
+        double? result = 0.0;
 
         switch (op)
         {
@@ -48,6 +55,9 @@ public class HomeController : Controller
                 result = x / y;
                 ViewBag.Operation = "/";
                 break;
+            default:
+                ViewBag.ErrorMessage = "Unknown operation!";
+                return View("CalculatorError");
         }
         
         ViewBag.Result = result;
