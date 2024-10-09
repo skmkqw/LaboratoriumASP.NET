@@ -70,6 +70,38 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Age(DateOnly? birthDate)
+    {
+        if (birthDate is null)
+        {
+            ViewBag.ErrorMessage = "Invalid or missing date!";
+            return View("AgeError");
+        }
+        
+        DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+
+        int years = today.Year - birthDate.Value.Year;
+        int months = today.Month - birthDate.Value.Month;
+        int days = today.Day - birthDate.Value.Day;
+
+        if (days < 0)
+        {
+            months--;
+            days += DateTime.DaysInMonth(today.Year, today.AddMonths(-1).Month);
+        }
+
+        if (months < 0)
+        {
+            years--;
+            months += 12;
+        }
+        
+        ViewBag.Years = years;
+        ViewBag.Months = months;
+        ViewBag.Days = days;
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();
