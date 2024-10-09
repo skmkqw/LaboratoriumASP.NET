@@ -23,11 +23,17 @@ public class HomeController : Controller
         return View();
     }
     
-    public IActionResult Calculator(string op, double? x, double? y)
+    public IActionResult Calculator(Operation? op, double? x, double? y)
     {
         // var op = Request.Query["op"];
         // var x = double.Parse(Request.Query["x"]);
         // var y = double.Parse(Request.Query["y"]);
+
+        if (op is null)
+        {
+            ViewBag.ErrorMessage = "Unknown operation!";
+            return View("CalculatorError");
+        }
 
         if (x is null || y is null)
         {
@@ -39,25 +45,22 @@ public class HomeController : Controller
 
         switch (op)
         {
-            case "add":
+            case Operation.Add:
                 result = x + y;
                 ViewBag.Operation = "+";
                 break;
-            case "sub":
+            case Operation.Sub:
                 result = x - y;
                 ViewBag.Operation = "-";
                 break;
-            case "mul":
+            case Operation.Mul:
                 result = x * y;
                 ViewBag.Operation = "*";
                 break;
-            case "div":
+            case Operation.Div:
                 result = x / y;
                 ViewBag.Operation = "/";
                 break;
-            default:
-                ViewBag.ErrorMessage = "Unknown operation!";
-                return View("CalculatorError");
         }
         
         ViewBag.Result = result;
@@ -77,4 +80,9 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+}
+
+public enum Operation
+{
+    Add, Sub, Mul, Div
 }
