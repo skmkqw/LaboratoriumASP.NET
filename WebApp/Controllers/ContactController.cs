@@ -69,6 +69,10 @@ public class ContactController : Controller
             return View();
         }
 
-        return View("Index");
+        contact.Id = ++_currentId;
+        
+        _contacts.Add(contact.Id, contact);
+
+        return View("Index", _contacts);
     }
 }
