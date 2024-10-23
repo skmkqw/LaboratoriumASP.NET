@@ -75,4 +75,10 @@ public class ContactController : Controller
 
         return View("Index", _contacts);
     }
+    
+    public IActionResult Delete(int id)
+    {
+        _contacts.Remove(id);
+        return View("Index", _contacts);
+    }
 }
