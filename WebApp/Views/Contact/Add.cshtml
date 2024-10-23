@@ -1,0 +1,38 @@
+@model ContactModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Add contact</h2>
+<form asp-action="Add" method="post">
+    <div class="my-3">
+        <label class="form-label" asp-for="FirstName">First name</label>
+        <input class="form-control" asp-for="FirstName">
+        <span class="text-danger" asp-validation-for="FirstName"></span>
+    </div>
+    <div class="my-3">
+        <label class="form-label" asp-for="LastName">Last name</label>
+        <input class="form-control" asp-for="LastName">
+        <span class="text-danger" asp-validation-for="LastName"></span>
+    </div>
+    <div class="my-3">
+        <label class="form-label" asp-for="Email">Email</label>
+        <input class="form-control" asp-for="Email">
+        <span class="text-danger" asp-validation-for="Email"></span>
+    </div>
+    <div class="my-3">
+        <label class="form-label" asp-for="PhoneNumber">Phone number (xxx xxx xxx)</label>
+        <input class="form-control" asp-for="PhoneNumber">
+        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+    </div>
+    <div class="my-3">
+        <label class="form-label" asp-for="BirthDate">Birth date</label>
+        <input class="form-control" asp-for="BirthDate">
+        <span class="text-danger" asp-validation-for="BirthDate"></span>
+    </div>
+    
+    <button class="btn btn-primary" type="submit">Add</button>
+    <button class="btn btn-danger" type="reset">Reset</button>
+</form>
