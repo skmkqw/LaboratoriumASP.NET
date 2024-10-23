@@ -81,4 +81,14 @@ public class ContactController : Controller
         _contacts.Remove(id);
         return View("Index", _contacts);
     }
+
+    public IActionResult Info(int id)
+    {
+        return View(_contacts[id]);
+    }
+
+    public IActionResult Edit(int id)
+    {
+        throw new NotImplementedException();
+    }
 }
