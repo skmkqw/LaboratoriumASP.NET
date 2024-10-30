@@ -1,56 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
+using WebApp.Models.Services;
 
 namespace WebApp.Controllers;
 
 public class ContactController : Controller
 {
-    private static Dictionary<int, ContactModel> _contacts = new()
-    {
-        {
-            1,
-            new ContactModel()
-            {
-                Id = 1,
-                FirstName = "Timofei",
-                LastName = "Korsakov",
-                Email = "tkorsakov77@gmail.com",
-                PhoneNumber = "123 456 789",
-                BirthDate = new DateOnly(2006, 4 ,1)
-            }
-        },
-        {
-            2,
-            new ContactModel()
-            {
-                Id = 2,
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "j.doe@gmail.com",
-                PhoneNumber = "221 359 126",
-                BirthDate = new DateOnly(2000,  11,21)
-            }
-        },
-        {
-            3,
-            new ContactModel()
-            {
-                Id = 3,
-                FirstName = "Jane",
-                LastName = "Smith",
-                Email = "j.smith@gmail.com",
-                PhoneNumber = "580 051 582",
-                BirthDate = new DateOnly(2002, 3 ,12)
-            }
-        },
-    };
+    private readonly IContactService _contactService;
 
-    private static int _currentId = 3;
-    
+    public ContactController(IContactService contactService)
+    {
+        _contactService = contactService;
+    }
+
     // List of contacts
     public IActionResult Index()
     {
-        return View(_contacts);
+        return View(_contactService.GetAll());
     }
     
     // AddContact form
@@ -68,27 +34,37 @@ public class ContactController : Controller
         {
             return View();
         }
-
-        contact.Id = ++_currentId;
         
-        _contacts.Add(contact.Id, contact);
-
-        return View("Index", _contacts);
+        _contactService.Add(contact);
+        
+        return RedirectToAction(nameof(Index));
     }
     
     public IActionResult Delete(int id)
     {
-        _contacts.Remove(id);
-        return View("Index", _contacts);
+        _contactService.Delete(id);
+        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Info(int id)
     {
-        return View(_contacts[id]);
+        return View(_contactService.GetById(id));
     }
 
     public IActionResult Edit(int id)
     {
-        throw new NotImplementedException();
+        return View(_contactService.GetById(id));
+    }
+
+    [HttpPost]
+    public IActionResult Edit(ContactModel contact)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+        
+        _contactService.Update(contact);
+        return RedirectToAction(nameof(Index));
     }
 }
