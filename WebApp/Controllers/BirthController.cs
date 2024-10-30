@@ -15,7 +15,7 @@ public class BirthController : Controller
     {
         if (!model.IsValid())
         {
-            return View("Error");
+            return View("AgeError");
         }
         return View(model);
     }   

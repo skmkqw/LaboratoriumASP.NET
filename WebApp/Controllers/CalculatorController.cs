@@ -15,7 +15,7 @@ public class CalculatorController : Controller
     {
         if (!model.IsValid())
         {
-            return View("Error");
+            return View("CalculatorError");
         }
         return View(model);
     }
