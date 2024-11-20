@@ -15,7 +15,7 @@ public class ContactController : Controller
         _contactService = contactService;
     }
 
-    // List of contacts
+    // List of contact
     [AllowAnonymous]
     public IActionResult Index()
     {
