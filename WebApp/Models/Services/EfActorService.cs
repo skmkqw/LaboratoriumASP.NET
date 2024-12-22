@@ -22,23 +22,29 @@ public class EfActorService : IActorService
                 Actor = person,
                 MovieCount = _dbContext.MovieCasts.Count(mc => mc.PersonId == person.PersonId)
             });
-        
+
         var actors = actorsQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
-        
+
         List<PersonModel> actorModels = new List<PersonModel>();
-        
+
         foreach (var actor in actors)
         {
-            var characterNames = _dbContext.MovieCasts
+            var movieRoles = _dbContext.MovieCasts
                 .Where(mc => mc.PersonId == actor.Actor.PersonId)
                 .OrderByDescending(mc => mc.Movie.Popularity)
-                .Select(mc => mc.CharacterName)
+                .Select(mc => new
+                {
+                    MovieTitle = mc.Movie.Title,
+                    CharacterName = mc.CharacterName
+                })
                 .ToList();
 
-            var a  = PersonMapper.ToModel(actor.Actor, actor.MovieCount, characterNames);
+            var movieRolesDictionary = movieRoles.ToDictionary(mr => mr.MovieTitle, mr => mr.CharacterName);
+
+            var a = PersonMapper.ToModel(actor.Actor, actor.MovieCount, movieRolesDictionary);
             actorModels.Add(a);
         }
 
@@ -51,12 +57,20 @@ public class EfActorService : IActorService
         if (actor == null) return null;
 
         var movieCount = _dbContext.MovieCasts.Count(mc => mc.PersonId == actorId);
-        var characterNames = _dbContext.MovieCasts
-            .Where(mc => mc.PersonId == actorId)
-            .Select(mc => mc.CharacterName)
+        
+        var movieRoles = _dbContext.MovieCasts
+            .Where(mc => mc.PersonId == actor.PersonId)
+            .OrderByDescending(mc => mc.Movie.Popularity)
+            .Select(mc => new
+            {
+                MovieTitle = mc.Movie.Title,
+                CharacterName = mc.CharacterName
+            })
             .ToList();
 
-        return PersonMapper.ToModel(actor, movieCount, characterNames);
+        var movieRolesDictionary = movieRoles.ToDictionary(mr => mr.MovieTitle, mr => mr.CharacterName);
+
+        return PersonMapper.ToModel(actor, movieCount, movieRolesDictionary);
     }
 
     public List<MovieModel> GetMoviesByActor(int actorId)

@@ -12,5 +12,5 @@ public class PersonModel
     
     public int MovieCount { get; set; }
     
-    public List<string> CharacterNames { get; set; }
+    public Dictionary<string, string> MovieRoles { get; set; }
 }

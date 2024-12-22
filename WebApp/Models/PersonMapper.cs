@@ -11,14 +11,14 @@ public static class PersonMapper
         };
     }
     
-    public static PersonModel ToModel(PersonEntity entity, int movieCount, List<string> characterNames)
+    public static PersonModel ToModel(PersonEntity entity, int movieCount, Dictionary<string, string> movieCharacterNames)
     {
         return new PersonModel
         {
             PersonId = entity.PersonId,
             PersonName = entity.PersonName,
             MovieCount = movieCount,
-            CharacterNames = characterNames
+            MovieRoles = movieCharacterNames
         };
     }
 }
