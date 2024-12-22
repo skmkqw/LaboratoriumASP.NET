@@ -1,0 +1,35 @@
+@model WebApp.Controllers.AddMovieToActorViewModel
+
+@{
+    ViewData["Title"] = "Add Movie to Actor";
+}
+
+<h1>Add Movie to @Model.ActorId</h1>
+
+<form asp-action="AddMovie" method="post">
+    <div class="form-group">
+        <label for="movieId">Movie</label>
+        <select asp-for="MovieId" class="form-control" id="movieId">
+            <option value="">Select a movie</option>
+            @foreach (var movie in Model.AvailableMovies)
+            {
+                <option value="@movie.MovieId">@movie.Title</option>
+            }
+        </select>
+        <span asp-validation-for="MovieId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="characterName">Character Name</label>
+        <input asp-for="CharacterName" class="form-control" id="characterName" />
+        <span asp-validation-for="CharacterName" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="ActorId" />
+
+    <button type="submit" class="btn btn-primary">Add Movie</button>
+</form>
+
+<a href="@Url.Action("Movies", "Actor", new { actorId = Model.ActorId })" class="btn btn-secondary">
+    Back to Movies
+</a>
