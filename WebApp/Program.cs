@@ -25,6 +25,9 @@ public class Program
         .AddEntityFrameworkStores<AppDbContext>();
 
         builder.Services.AddDbContext<AppDbContext>();
+        
+        builder.Services.AddDbContext<MoviesDbContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("MoviesConnection")));
 
         builder.Services.AddMemoryCache();
         builder.Services.AddSession();
