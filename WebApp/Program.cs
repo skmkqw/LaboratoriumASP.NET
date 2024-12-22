@@ -32,6 +32,8 @@ public class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddSession();
         builder.Services.AddScoped<IContactService, EfContactService>();
+        builder.Services.AddScoped<IMovieCastService, EfMovieCastService>();
+        builder.Services.AddScoped<IActorService, EfActorService>();
 
         var app = builder.Build();
 

@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Models;
 
 [Table("movie_cast")]
+[Keyless]
 public class MovieCastEntity
 {
     [ForeignKey("Movie")]

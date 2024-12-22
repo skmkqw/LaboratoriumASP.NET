@@ -11,26 +11,35 @@ public class EfActorService : IActorService
 
     public List<PersonModel> GetActorsWithMovieCounts(int pageNumber, int pageSize, out int totalPages)
     {
-        var query = _dbContext.Persons
+        var actorsQuery = _dbContext.Persons
             .Select(person => new
             {
                 Actor = person,
-                MovieCount = _dbContext.MovieCasts.Count(mc => mc.PersonId == person.PersonId),
-                CharacterNames = _dbContext.MovieCasts
-                    .Where(mc => mc.PersonId == person.PersonId)
-                    .OrderByDescending(mc => mc.Movie.Popularity)
-                    .Select(mc => mc.CharacterName)
-                    .ToList()
-            })
-            .AsQueryable(); 
+                MovieCount = _dbContext.MovieCasts.Count(mc => mc.PersonId == person.PersonId)
+            });
 
-        totalPages = (int)Math.Ceiling(query.Count() / (double)pageSize);
+        totalPages = (int)Math.Ceiling(actorsQuery.Count() / (double)pageSize);
 
-        return query
+        var actors = actorsQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(result => PersonMapper.ToModel(result.Actor, result.MovieCount, result.CharacterNames))
             .ToList();
+        
+        List<PersonModel> actorModels = new List<PersonModel>();
+        
+        foreach (var actor in actors)
+        {
+            var characterNames = _dbContext.MovieCasts
+                .Where(mc => mc.PersonId == actor.Actor.PersonId)
+                .OrderByDescending(mc => mc.Movie.Popularity)
+                .Select(mc => mc.CharacterName)
+                .ToList();
+
+            var a  = PersonMapper.ToModel(actor.Actor, actor.MovieCount, characterNames);
+            actorModels.Add(a);
+        }
+
+        return actorModels;
     }
 
     public PersonModel? GetActorById(int actorId)
