@@ -15,4 +15,6 @@ public class MovieCastEntity
 
     [Column("character_name")]
     public string CharacterName { get; set; }
+
+    public MovieEntity Movie { get; set; }
 }
