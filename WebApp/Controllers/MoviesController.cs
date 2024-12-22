@@ -5,6 +5,14 @@ using WebApp.Models.Services;
 
 namespace WebApp.Controllers;
 
+public enum PaginationAction
+{
+    First,
+    Last,
+    Next,
+    Previous
+}
+
 [Authorize]
 public class ActorController : Controller
 {
@@ -20,8 +28,10 @@ public class ActorController : Controller
     public IActionResult Index(int pageNumber = 1)
     {
         int pageSize = 20;
-        int totalPages;
-        var actors = _actorService.GetActorsWithMovieCounts(pageNumber, pageSize, out totalPages);
+        
+        int totalPages = _actorService.GetPageCount(pageSize);
+        
+        var actors = _actorService.GetActorsWithMovieCounts(pageNumber, pageSize);
 
         var model = new ActorListViewModel
         {
@@ -89,27 +99,13 @@ public class ActorController : Controller
         return View("AddMovieToActor", model);
     }
 
-    public IActionResult Pagination(int pageNumber, string action, int actorId)
+    public IActionResult Pagination(int pageNumber)
     {
         int pageSize = 20;
-        int totalPages;
-        // switch (action)
-        // {
-        //     case "first":
-        //         pageNumber = 1;
-        //         break;
-        //     case "last":
-        //         pageNumber = totalPages;
-        //         break;
-        //     case "next":
-        //         if (pageNumber < totalPages) pageNumber++;
-        //         break;
-        //     case "previous":
-        //         if (pageNumber > 1) pageNumber--;
-        //         break;
-        // }
+        int totalPages = _actorService.GetPageCount(pageSize);
 
-        var actors = _actorService.GetActorsWithMovieCounts(pageNumber, pageSize, out totalPages);
+        var actors = _actorService.GetActorsWithMovieCounts(pageNumber, pageSize);
+        
         var model = new ActorListViewModel
         {
             Actors = actors,

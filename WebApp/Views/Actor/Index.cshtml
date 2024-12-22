@@ -8,25 +8,25 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>Number of Movies</th>
-            <th>Actions</th>
-        </tr>
+    <tr>
+        <th>Name</th>
+        <th>Number of Movies</th>
+        <th>Actions</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var actor in Model.Actors)
-        {
-            <tr>
-                <td>@actor.PersonName</td>
-                <td>@actor.MovieCount</td>
-                <td>
-                    <a href="@Url.Action("Movies", "Actor", new { actorId = actor.PersonId })" class="btn btn-primary">
-                        View Movies
-                    </a>
-                </td>
-            </tr>
-        }
+    @foreach (var actor in Model.Actors)
+    {
+        <tr>
+            <td>@actor.PersonName</td>
+            <td>@actor.MovieCount</td>
+            <td>
+                <a href="@Url.Action("Movies", "Actor", new { actorId = actor.PersonId })" class="btn btn-primary">
+                    View Movies
+                </a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
 
@@ -35,27 +35,27 @@
         @if (Model.CurrentPage > 1)
         {
             <li class="page-item">
-                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = 1, action = "first" })">First</a>
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = 1 })">First</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.CurrentPage - 1, action = "previous" })">Previous</a>
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.CurrentPage - 1 })">Previous</a>
             </li>
         }
-        
-        @for (int i = 1; i <= Model.TotalPages; i++)
+
+        @for (int i = Math.Max(1, Model.CurrentPage - 3); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 3); i++)
         {
             <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = i, action = "" })">@i</a>
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = i })">@i</a>
             </li>
         }
-        
+
         @if (Model.CurrentPage < Model.TotalPages)
         {
             <li class="page-item">
-                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.CurrentPage + 1, action = "next" })">Next</a>
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.CurrentPage + 1 })">Next</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.TotalPages, action = "last" })">Last</a>
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.TotalPages })">Last</a>
             </li>
         }
     </ul>

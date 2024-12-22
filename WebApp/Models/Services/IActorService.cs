@@ -2,7 +2,8 @@ namespace WebApp.Models.Services;
 
 public interface IActorService
 {
-    List<PersonModel> GetActorsWithMovieCounts(int pageNumber, int pageSize, out int totalPages);
+    int GetPageCount(int pageSize);
+    List<PersonModel> GetActorsWithMovieCounts(int pageNumber, int pageSize);
     PersonModel? GetActorById(int actorId);
     List<MovieModel> GetMoviesByActor(int actorId);
 }

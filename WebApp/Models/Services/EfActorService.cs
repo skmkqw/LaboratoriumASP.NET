@@ -9,7 +9,12 @@ public class EfActorService : IActorService
         _dbContext = dbContext;
     }
 
-    public List<PersonModel> GetActorsWithMovieCounts(int pageNumber, int pageSize, out int totalPages)
+    public int GetPageCount(int pageSize)
+    {
+        return _dbContext.Persons.Count() / pageSize + 1;
+    }
+
+    public List<PersonModel> GetActorsWithMovieCounts(int pageNumber, int pageSize)
     {
         var actorsQuery = _dbContext.Persons
             .Select(person => new
@@ -17,9 +22,7 @@ public class EfActorService : IActorService
                 Actor = person,
                 MovieCount = _dbContext.MovieCasts.Count(mc => mc.PersonId == person.PersonId)
             });
-
-        totalPages = (int)Math.Ceiling(actorsQuery.Count() / (double)pageSize);
-
+        
         var actors = actorsQuery
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
