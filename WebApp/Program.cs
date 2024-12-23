@@ -25,10 +25,15 @@ public class Program
         .AddEntityFrameworkStores<AppDbContext>();
 
         builder.Services.AddDbContext<AppDbContext>();
+        
+        builder.Services.AddDbContext<MoviesDbContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("MoviesConnection")));
 
         builder.Services.AddMemoryCache();
         builder.Services.AddSession();
         builder.Services.AddScoped<IContactService, EfContactService>();
+        builder.Services.AddScoped<IMovieCastService, EfMovieCastService>();
+        builder.Services.AddScoped<IActorService, EfActorService>();
 
         var app = builder.Build();
 

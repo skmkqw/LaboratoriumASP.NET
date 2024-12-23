@@ -1,0 +1,85 @@
+@model WebApp.Models.ActorListViewModel
+
+@{
+    ViewData["Title"] = "Actors List";
+}
+
+<h1>Actors List</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Number of Movies</th>
+        <th>Roles</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var actor in Model.Actors)
+    {
+        <tr>
+            <td>@actor.PersonName</td>
+            <td>
+                <a href="@Url.Action("Movies", "Actor", new { actorId = actor.PersonId })">
+                    @actor.MovieCount
+                </a>
+            </td>
+            <td>
+                <div class="accordion" id="accordion-@actor.PersonId">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-@actor.PersonId">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-@actor.PersonId" aria-expanded="true"
+                                    aria-controls="collapse-@actor.PersonId">
+                                Played Roles
+                            </button>
+                        </h2>
+                        <div id="collapse-@actor.PersonId" class="accordion-collapse collapse show"
+                             aria-labelledby="heading-@actor.PersonId" data-bs-parent="#accordion-@actor.PersonId">
+                            <div class="accordion-body">
+                                <ul>
+                                    @foreach (var movieRole in actor.MovieRoles)
+                                    {
+                                        <li><strong>@movieRole.Key</strong>: @movieRole.Value</li> 
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div class="pagination">
+    <ul class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = 1 })">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.CurrentPage - 1 })">Previous</a>
+            </li>
+        }
+
+        @for (int i = Math.Max(1, Model.CurrentPage - 3); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 3); i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = i })">@i</a>
+            </li>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.CurrentPage + 1 })">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Pagination", "Actor", new { pageNumber = Model.TotalPages })">Last</a>
+            </li>
+        }
+    </ul>
+</div>
