@@ -5,15 +5,6 @@ using WebApp.Models.Services;
 
 namespace WebApp.Controllers;
 
-public enum PaginationAction
-{
-    First,
-    Last,
-    Next,
-    Previous
-}
-
-[Authorize]
 public class ActorController : Controller
 {
     private readonly IActorService _actorService;
@@ -51,7 +42,9 @@ public class ActorController : Controller
             return NotFound();
         }
 
-        var movies = _actorService.GetMoviesByActor(actorId);
+        var movies = _actorService.GetMoviesByActor(actorId)
+            .OrderByDescending(m => m.Popularity)
+            .ToList();
 
         var model = new ActorMoviesViewModel
         {
@@ -62,6 +55,7 @@ public class ActorController : Controller
         return View(model);
     }
 
+    [Authorize]
     [HttpGet]
     public IActionResult AddMovie(int actorId)
     {
@@ -74,7 +68,8 @@ public class ActorController : Controller
 
         return View("AddMovieToActor", model);
     }
-
+    
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult AddMovie(AddMovieToActorViewModel model)
