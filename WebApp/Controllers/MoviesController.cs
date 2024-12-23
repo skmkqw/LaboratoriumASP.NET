@@ -80,26 +80,35 @@ public class ActorController : Controller
     [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult AddMovie(AddMovieToActorViewModel model)
+    public IActionResult AddMovie(int actorId, int movieId, string characterName)
     {
-        if (ModelState.IsValid)
+        if (actorId <= 0 || movieId <= 0 || string.IsNullOrWhiteSpace(characterName))
         {
-            var movieCastModel = new MovieCastModel
+            ModelState.AddModelError(string.Empty, "All fields are required.");
+        
+            var availableMovies = _movieCastService.GetAvailableMoviesForActor(actorId);
+            var model = new AddMovieToActorViewModel
             {
-                PersonId = model.ActorId,
-                MovieId = model.MovieId,
-                CharacterName = model.CharacterName
+                ActorId = actorId,
+                ActorFullName = _actorService.GetActorById(actorId)?.PersonName ?? "Unknown",
+                MovieId = movieId,
+                CharacterName = characterName,
+                AvailableMovies = availableMovies
             };
-
-            _movieCastService.AddActorToMovie(movieCastModel);
-
-            return RedirectToAction("Movies", new { actorId = model.ActorId });
+        
+            return View("AddMovieToActor", model);
         }
 
-        var availableMovies = _movieCastService.GetAvailableMoviesForActor(model.ActorId);
-        model.AvailableMovies = availableMovies;
+        var movieCastModel = new MovieCastModel
+        {
+            PersonId = actorId,
+            MovieId = movieId,
+            CharacterName = characterName
+        };
 
-        return View("AddMovieToActor", model);
+        _movieCastService.AddActorToMovie(movieCastModel);
+
+        return RedirectToAction("Movies", new { actorId = actorId });
     }
 
     public IActionResult Pagination(int pageNumber)

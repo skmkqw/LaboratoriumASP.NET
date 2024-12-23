@@ -3,11 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Models;
 
+[PrimaryKey("MovieId", "PersonId")]
 [Table("movie_cast")]
-[Keyless]
 public class MovieCastEntity
 {
-    [ForeignKey("Movie")]
     [Column("movie_id")]
     public int MovieId { get; set; }
 
