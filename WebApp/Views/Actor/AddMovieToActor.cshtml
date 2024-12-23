@@ -4,7 +4,7 @@
     ViewData["Title"] = "Add Movie to Actor";
 }
 
-<h1>Add Movie to @Model.ActorId</h1>
+<h1>Add Movie to @Model.ActorFullName</h1>
 
 <form asp-action="AddMovie" method="post">
     <div class="form-group">
@@ -27,9 +27,9 @@
 
     <input type="hidden" asp-for="ActorId" />
 
-    <button type="submit" class="btn btn-primary">Add Movie</button>
+    <button type="submit" class="btn btn-primary mt-3">Add Movie</button>
 </form>
 
-<a href="@Url.Action("Movies", "Actor", new { actorId = Model.ActorId })" class="btn btn-secondary">
+<a href="@Url.Action("Movies", "Actor", new { actorId = Model.ActorId })" class="btn btn-secondary mt-3">
     Back to Movies
 </a>

@@ -59,10 +59,18 @@ public class ActorController : Controller
     [HttpGet]
     public IActionResult AddMovie(int actorId)
     {
+        var actor = _actorService.GetActorById(actorId);
+        if (actor == null)
+        {
+            return NotFound();
+        }
+        
         var availableMovies = _movieCastService.GetAvailableMoviesForActor(actorId);
+        
         var model = new AddMovieToActorViewModel
         {
             ActorId = actorId,
+            ActorFullName = actor.PersonName,
             AvailableMovies = availableMovies
         };
 
